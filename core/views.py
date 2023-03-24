@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import pandas as pd
 from .models import Consumer
-from .serializers import ConsumerSerializer
+from .serializers import ConsumerSerializer, DiscountRulesSerializer
 from .forms import UploadFileForm, ConsumerForm, RulesForm
 import ipdb
 from django import http
@@ -67,10 +67,10 @@ def upload(request):
 
         list = Consumer.objects.all()
 
-        for consumer in list:
-           serializer = ConsumerSerializer(data=form.cleaned_data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
+        # for consumer in list:
+        #     serializer = DiscountRulesSerializer(data=consumer.name)
+        #     serializer.is_valid(raise_exception=True)
+        #     serializer.save()
 
         return render(request, "upload_success.html", {"list": list})
 

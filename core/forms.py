@@ -17,7 +17,7 @@ class ConsumerForm(forms.ModelForm):
             "city",
             "state",
             "consumption",
-            "distributor_tax",
+            # "distributor_tax",
             "consumer_type",
         ]
 

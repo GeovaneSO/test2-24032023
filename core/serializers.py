@@ -44,16 +44,17 @@ class DiscountRulesSerializer(serializers.ModelSerializer):
         consumer = Consumer.objects.get(validated_data['name'])
 
         if validated_data['consumer_type'] == "Residencial":
-            DiscountRules.objects.create(
+            role = DiscountRules.objects.create(
             tax_type=DiscountRules.RESIDENTIAL,
             min_consumption=0,
             max_consumption=10000,
             discount=0.18,
             coverage=0.9
-            )
+            
+        )
         if validated_data['consumer_type'] == "Comercial":
 
-            DiscountRules.objects.create(
+            role = DiscountRules.objects.create(
                 tax_type=DiscountRules.COMMERCIAL,
                 min_consumption=10001,
                 max_consumption=20000,
@@ -63,13 +64,14 @@ class DiscountRulesSerializer(serializers.ModelSerializer):
         if validated_data['consumer_type'] == "Industrial":
 
 
-            DiscountRules.objects.create(
+            role =DiscountRules.objects.create(
                 tax_type=DiscountRules.INDUSTRIAL,
                 min_consumption=20001,
                 max_consumption=None,
                 discount=0.25,
                 coverage=0.99
             )
+        consumer.discount_rule.add(role)
 
     class Meta:
         model = DiscountRules
