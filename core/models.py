@@ -2,11 +2,15 @@ from django.db import models
 
 # Create your models here.
 
+RESIDENTIAL = "Residencial"
+COMMERCIAL = "Comercial"
+INDUSTRIAL = "Industrial"
+
 
 class ConsumerTypeChoices(models.TextChoices):
-    Residential = "Residencial"
-    Commercial = "Comercial"
-    Industrial = "Industrial"
+    RESIDENTIAL = ("Residencial",)
+    COMMERCIAL = ("Comercial",)
+    INDUSTRIAL = ("Industrial",)
 
 
 class ConsumptionRangeChoices(models.TextChoices):
@@ -31,16 +35,34 @@ class Consumer(models.Model):
     distributor_tax = models.FloatField(
         "Tarifa da Distribuidora", blank=True, null=True
     )
-    #  create the foreign key for discount rule model here
-
-
-class DiscountRules:
-    consumer_type = models.CharField(max_length=50, choices=ConsumerTypeChoices.choices)
-    consumption_range = models.CharField(
-        max_length=50, choices=ConsumptionRangeChoices.choices
+    coverage = models.IntegerField(null=True)
+    consumer_type = models.CharField(
+        max_length=50, choices=ConsumerTypeChoices.choices, null=True
     )
-    cover_value = models.FloatField(choices=CoverValueChoices.choices)
-    discount_value = models.FloatField()
+    #  create the foreign key for discount rule model here
+    discount_rule = models.ForeignKey(
+        "core.DiscountRules",
+        on_delete=models.CASCADE,
+        related_name="consumers",
+        null=True,
+    )
+
+
+class DiscountRules(models.Model):
+    RESIDENTIAL = "Residencial"
+    COMMERCIAL = "Comercial"
+    INDUSTRIAL = "Industrial"
+    ConsumerTypeChoices = (
+        (RESIDENTIAL, "Residencial"),
+        (COMMERCIAL, "Comercial"),
+        (INDUSTRIAL, "Industrial"),
+    )
+
+    tax_type = models.CharField(choices=ConsumerTypeChoices, max_length=20)
+    min_consumption = models.IntegerField()
+    max_consumption = models.IntegerField()
+    discount = models.FloatField()
+    coverage = models.FloatField()
 
 
 # TODO: Create the model DiscountRules below
